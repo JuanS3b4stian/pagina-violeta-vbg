@@ -1,0 +1,7 @@
+{
+  "name": "Página Violeta - San Pedro de los Milagros",
+  "description": "Plataforma institucional para la atención integral de Violencia Basada en Género y discriminación LGBTIQ+, facilitando la denuncia, gestión y seguimiento de casos.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
