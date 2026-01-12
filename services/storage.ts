@@ -1,10 +1,11 @@
 
-import { CaseRecord, User, UserRole, CaseStatus, UrgencyLevel } from '../types';
+import { CaseRecord, User, UserRole, CaseStatus, UrgencyLevel, ManagementNote } from '../types';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx0Homl4XH6wK1apCqHxBEH6Tk5UqH8MYD9HMwwYbn7GjpQS7PqZ4Uig-zey2GO2OgIrQ/exec'; 
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxN4YiIwY_JeJEjsoUipO05H5kaPIL410qLpAusNriDwpUlbfnVhDETigh3uEa-i1SNTw/exec'; 
 
 const USERS_KEY = 'violeta_users';
 const CASES_KEY = 'violeta_cases';
+const NOTES_KEY = 'violeta_notes';
 
 const INITIAL_USERS: User[] = [
   { id: 'u1', username: 'admin1', password: '1100', name: 'Coordinador de Equidad de Género', role: UserRole.ADMIN1, email: 'genero@sanpedrodelosmilagros-antioquia.gov.co' },
@@ -23,10 +24,15 @@ export const storage = {
     if (!localStorage.getItem(CASES_KEY)) {
       localStorage.setItem(CASES_KEY, JSON.stringify([]));
     }
+    if (!localStorage.getItem(NOTES_KEY)) {
+      localStorage.setItem(NOTES_KEY, JSON.stringify([]));
+    }
   },
 
   getUsers: (): User[] => JSON.parse(localStorage.getItem(USERS_KEY) || '[]'),
   getCases: (): CaseRecord[] => JSON.parse(localStorage.getItem(CASES_KEY) || '[]'),
+  
+  getNotes: (): ManagementNote[] => JSON.parse(localStorage.getItem(NOTES_KEY) || '[]'),
 
   saveCase: async (newCase: any) => {
     const cases = storage.getCases();
@@ -55,7 +61,19 @@ export const storage = {
     fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'updateCase', payload: updatedCase }) });
   },
 
-  // Fix: Added missing requestReclassification method for operational desks to request case reassignment
+  // Gestión de Notas Quincenales
+  saveNote: async (note: ManagementNote) => {
+    const notes = storage.getNotes();
+    notes.push(note);
+    localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+  },
+
+  deleteNote: (id: string) => {
+    const notes = storage.getNotes();
+    const filtered = notes.filter(n => n.id !== id);
+    localStorage.setItem(NOTES_KEY, JSON.stringify(filtered));
+  },
+
   requestReclassification: async (caseRecord: CaseRecord, reason: string, office: string) => {
     try {
       const resp = await fetch(APPS_SCRIPT_URL, { 
@@ -91,6 +109,46 @@ export const storage = {
       return await resp.json();
     } catch (e) {
       console.warn("Error resolviendo reclasificación:", e);
+      return null;
+    }
+  },
+
+  // Gestión de Solicitudes de Cierre
+  requestClosure: async (caseRecord: CaseRecord, reason: string, office: string) => {
+    try {
+      const resp = await fetch(APPS_SCRIPT_URL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'requestClosure', payload: { caseRecord, reason, office } }) 
+      });
+      return await resp.json();
+    } catch (e) {
+      console.warn("Error solicitando cierre:", e);
+      return null;
+    }
+  },
+
+  acceptClosure: async (caseRecord: CaseRecord, office: string) => {
+    try {
+      const resp = await fetch(APPS_SCRIPT_URL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'acceptClosure', payload: { caseRecord, office } }) 
+      });
+      return await resp.json();
+    } catch (e) {
+      console.warn("Error aceptando cierre:", e);
+      return null;
+    }
+  },
+
+  denyClosure: async (caseRecord: CaseRecord, justification: string, office: string) => {
+    try {
+      const resp = await fetch(APPS_SCRIPT_URL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'denyClosure', payload: { caseRecord, justification, office } }) 
+      });
+      return await resp.json();
+    } catch (e) {
+      console.warn("Error negando cierre:", e);
       return null;
     }
   }

@@ -11,6 +11,7 @@ export enum CaseStatus {
   EN_GESTION = 'En Gestión',
   RECLASIFICACION_SOLICITADA = 'Reclasificación Solicitada',
   RECLASIFICACION_PENDIENTE_ADMIN2 = 'Pendiente Decisión Sec. Gobierno',
+  CIERRE_SOLICITADO = 'Cierre Solicitado',
   CONFLICTO = 'Conflicto de Competencia',
   CERRADO = 'Cerrado'
 }
@@ -28,6 +29,13 @@ export interface CaseActivity {
   user: string;
   description: string;
   attachmentUrl?: string;
+}
+
+export interface ManagementNote {
+  id: string;
+  officeName: string;
+  date: string;
+  content: string;
 }
 
 export interface CaseRecord {
