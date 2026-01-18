@@ -77,6 +77,10 @@ export interface CaseRecord {
   solicitudReclasificacionUrl?: string;
   analisisAdmin1Url?: string;
   decisionFinalUrl?: string;
+  
+  // Informes de Caso (Celdas P y Q)
+  informe1Url?: string;
+  informe2Url?: string;
 }
 
 export interface User {

@@ -1,7 +1,7 @@
 
 import { CaseRecord, User, UserRole, CaseStatus, UrgencyLevel, ManagementNote } from '../types';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxN4YiIwY_JeJEjsoUipO05H5kaPIL410qLpAusNriDwpUlbfnVhDETigh3uEa-i1SNTw/exec'; 
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjAcLqsuDyiNqoDm44kc_F4tRoP6pMoE9qrA35a2h9dB6B4_mHdTLEvLlWI2uZYD0AMQ/exec'; 
 
 const USERS_KEY = 'violeta_users';
 const CASES_KEY = 'violeta_cases';
@@ -61,7 +61,6 @@ export const storage = {
     fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'updateCase', payload: updatedCase }) });
   },
 
-  // Gestión de Notas Quincenales
   saveNote: async (note: ManagementNote) => {
     const notes = storage.getNotes();
     notes.push(note);
@@ -113,7 +112,6 @@ export const storage = {
     }
   },
 
-  // Gestión de Solicitudes de Cierre
   requestClosure: async (caseRecord: CaseRecord, reason: string, office: string) => {
     try {
       const resp = await fetch(APPS_SCRIPT_URL, { 
@@ -149,6 +147,19 @@ export const storage = {
       return await resp.json();
     } catch (e) {
       console.warn("Error negando cierre:", e);
+      return null;
+    }
+  },
+
+  saveReport: async (caseRecord: CaseRecord, reportNumber: number, content: string, office: string) => {
+    try {
+      const resp = await fetch(APPS_SCRIPT_URL, { 
+        method: 'POST', 
+        body: JSON.stringify({ action: 'saveReport', payload: { caseRecord, reportNumber, content, office } }) 
+      });
+      return await resp.json();
+    } catch (e) {
+      console.warn("Error guardando informe:", e);
       return null;
     }
   }
