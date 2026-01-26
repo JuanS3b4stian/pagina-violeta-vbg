@@ -8,13 +8,13 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
-  const [username, setUsername] = useState('');
+  const users = storage.getUsers();
+  const [username, setUsername] = useState(users[0]?.username || '');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const users = storage.getUsers();
     const user = users.find(u => u.username === username);
     
     if (user && user.password === password) {
@@ -40,23 +40,31 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             </div>
           )}
           <div className="space-y-1">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Usuario Institucional</label>
-            <input 
-              required
-              type="text"
-              placeholder=""
-              className="w-full px-4 py-3 bg-gray-50 rounded-xl border-none focus:ring-2 focus:ring-violet-600 transition-all font-bold text-violet-900"
-              value={username}
-              onChange={e => setUsername(e.target.value)}
-            />
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Entidad Institucional</label>
+            <div className="relative">
+              <select 
+                required
+                className="w-full px-4 py-3 bg-gray-50 rounded-xl border-none focus:ring-2 focus:ring-violet-600 transition-all font-bold text-violet-900 appearance-none"
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+              >
+                {users.map(u => (
+                  <option key={u.username} value={u.username}>{u.username}</option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                <svg className="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+              </div>
+            </div>
           </div>
           <div className="space-y-1">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">PIN Secreto</label>
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">PIN Secreto (6 dígitos)</label>
             <input 
               required
               type="password"
-              placeholder="••••"
-              className="w-full px-4 py-3 bg-gray-50 rounded-xl border-none focus:ring-2 focus:ring-violet-600 transition-all font-mono text-center text-2xl tracking-widest"
+              placeholder="••••••"
+              maxLength={6}
+              className="w-full px-4 py-3 bg-gray-50 rounded-xl border-none focus:ring-2 focus:ring-violet-600 transition-all font-mono text-center text-2xl tracking-[0.5em]"
               value={password}
               onChange={e => setPassword(e.target.value)}
             />

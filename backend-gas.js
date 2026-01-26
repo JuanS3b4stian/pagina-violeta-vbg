@@ -1,8 +1,8 @@
 
 /**
- * BACKEND PÁGINA VIOLETA - VERSION 2.7 (2026)
+ * BACKEND PÁGINA VIOLETA - VERSION 2.8 (2026)
  * Municipio San Pedro de los Milagros
- * Gestión de Informes por Caso (Celdas P y Q)
+ * Gestión de Informes por Caso (Celdas P y Q) - Ajuste de Formato
  */
 
 const SPREADSHEET_ID = '1EPE2BlGls0jVpOkRQKXCok_-98LmF1AWH5VenzsG990'; 
@@ -197,8 +197,7 @@ function createCaseReportPdf(c, reportNumber, content, office) {
       ${content}
     </div>
     <br/><br/>
-    <p><b>Firma del Funcionario Responsable</b></p>
-    <p>Sistema Institucional Página Violeta</p>
+    <p style="text-align: center; color: #666; font-size: 10px;">Documento generado automáticamente por el Sistema Institucional Página Violeta</p>
   </div>`;
   return Utilities.newBlob(html, 'text/html').getAs('application/pdf');
 }

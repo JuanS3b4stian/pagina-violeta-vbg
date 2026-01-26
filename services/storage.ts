@@ -1,23 +1,27 @@
 
 import { CaseRecord, User, UserRole, CaseStatus, UrgencyLevel, ManagementNote } from '../types';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjAcLqsuDyiNqoDm44kc_F4tRoP6pMoE9qrA35a2h9dB6B4_mHdTLEvLlWI2uZYD0AMQ/exec'; 
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxhvs2EVfLyh69jgXgEfsrRvYW4Iyk3VnahO6egZMwwAso_4ufiRz16-2jMPQ2YJtwcIA/exec'; 
 
 const USERS_KEY = 'violeta_users';
 const CASES_KEY = 'violeta_cases';
 const NOTES_KEY = 'violeta_notes';
 
 const INITIAL_USERS: User[] = [
-  { id: 'u1', username: 'admin1', password: '1100', name: 'Coordinador de Equidad de Género', role: UserRole.ADMIN1, email: 'genero@sanpedrodelosmilagros-antioquia.gov.co' },
-  { id: 'u2', username: 'admin2', password: '4321', name: 'Secretaría de Gobierno', role: UserRole.ADMIN2, email: 'secgobierno@sanpedrodelosmilagros-antioquia.gov.co' },
-  { id: 'u3', username: 'dinspeccion', password: '1122', name: 'Inspección de Policía', role: UserRole.DESPACHO, officeName: 'Inspección de Policía', email: 'inspeccion@sanpedrodelosmilagros-antioquia.gov.co' },
-  { id: 'u4', username: 'dcomisaria', password: '1092', name: 'Comisaría de Familia', role: UserRole.DESPACHO, officeName: 'Comisaría de Familia', email: 'comisaria@sanpedrodelosmilagros-antioquia.gov.co' },
-  { id: 'u5', username: 'dhospital', password: '2345', name: 'Hospital Santa Isabel', role: UserRole.DESPACHO, officeName: 'Hospital Santa Isabel', email: 'hospital@esesantaisabel.gov.co' },
-  { id: 'u6', username: 'dsecretaria', password: '9287', name: 'Secretaría de Salud', role: UserRole.DESPACHO, officeName: 'Secretaría de Salud', email: 'direccionlocalsaludspm@gmail.com' },
+  { id: 'u1', username: 'CoordinadorEquidad', password: '928574', name: 'Coordinador de Equidad de Género', role: UserRole.ADMIN1, email: 'genero@sanpedrodelosmilagros-antioquia.gov.co' },
+  { id: 'u2', username: 'SecretaríaGobierno', password: '276043', name: 'Secretaría de Gobierno', role: UserRole.ADMIN2, email: 'secgobierno@sanpedrodelosmilagros-antioquia.gov.co' },
+  { id: 'u3', username: 'InspeccionPolicía', password: '358256', name: 'Inspección de Policía', role: UserRole.DESPACHO, officeName: 'Inspección de Policía', email: 'inspeccion@sanpedrodelosmilagros-antioquia.gov.co' },
+  { id: 'u4', username: 'ComisaríaFamilia', password: '658272', name: 'Comisaría de Familia', role: UserRole.DESPACHO, officeName: 'Comisaría de Familia', email: 'comisaria@sanpedrodelosmilagros-antioquia.gov.co' },
+  { id: 'u5', username: 'HospitalSI', password: '764821', name: 'Hospital Santa Isabel', role: UserRole.DESPACHO, officeName: 'Hospital Santa Isabel', email: 'hospital@esesantaisabel.gov.co' },
+  { id: 'u6', username: 'SecretaríaSalud', password: '762727', name: 'Secretaría de Salud', role: UserRole.DESPACHO, officeName: 'Secretaría de Salud', email: 'direccionlocalsaludspm@gmail.com' },
 ];
 
 export const storage = {
   init: () => {
+    // Si ya existe algo en localStorage, lo limpiamos para forzar la actualización de contraseñas y usuarios
+    // (Opcional: solo para propósitos de esta actualización específica)
+    localStorage.removeItem(USERS_KEY); 
+    
     if (!localStorage.getItem(USERS_KEY)) {
       localStorage.setItem(USERS_KEY, JSON.stringify(INITIAL_USERS));
     }
